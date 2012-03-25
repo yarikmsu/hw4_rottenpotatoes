@@ -29,19 +29,20 @@ describe MoviesController do
       @m.stub(:title)
       post :create, {:movie => @movie} 
     end
-    it 'should notice about creating the movie' do
-      Movie.stub(:create!).with(@movie).and_return(@m)
-      @m.stub(:title => 'Alien')
-      post :create, {:movie => @movie}
-      @controller.instance_eval{flash.stub!(:sweep)}
-      get :index
-      flash.now[:notice].should be == "Alien was successfully created."
-    end
-    it 'should redirect to the movie page' do
-      Movie.stub(:create!).with(@movie).and_return(@m)
-      @m.stub(:title)
-      post :create, {:movie => @movie}
-      response.should redirect_to(:movies)
+    describe 'after create!' do
+      before(:each) do
+        Movie.stub(:create!).with(@movie).and_return(@m)
+        @m.stub(:title => 'Alien')
+        post :create, {:movie => @movie}
+      end
+      it 'should notice about creating the movie' do
+        @controller.instance_eval{flash.stub!(:sweep)}
+        get :index
+        flash.now[:notice].should be == "Alien was successfully created."
+      end
+      it 'should redirect to the movie page' do
+        response.should redirect_to(:movies)
+      end  
     end
   end
   describe 'destroy the movie' do
