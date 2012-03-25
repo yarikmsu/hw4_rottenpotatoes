@@ -2,8 +2,25 @@ require 'spec_helper'
 
 describe MoviesController do
   describe 'edit movie info' do
-    it 'should select edit template for rendering'
-    it 'should make the movie attributes available to that template for editing'
+    before(:each) do
+      @m = mock('movie', :id => '1234', :title => 'Alien')
+    end
+    it 'should call find method' do
+      Movie.should_receive(:find).with('1234').and_return(@m)
+      get :edit, :id => 1234
+    end
+    context 'after find' do
+      before(:each) do
+        Movie.stub(:find).with('1234').and_return(@m)
+        get :edit, :id => 1234
+      end
+      it 'should select edit template for rendering' do
+        response.should render_template('edit')
+      end
+      it 'should make the movie attributes available to that template for editing' do
+        assigns(:movie).should == @m
+      end
+    end
   end
   describe 'update movie info' do
     before(:each) do
@@ -42,6 +59,7 @@ describe MoviesController do
   describe 'add new movie' do
     it 'should select add template for rendering' do
       get :new
+      response.should render_template('new')
     end
   end
   describe 'create new movie' do
@@ -70,7 +88,6 @@ describe MoviesController do
   end
   describe 'destroy the movie' do
     before(:each) do
-      # @movie = {"title"=>"s", "rating"=>"G", "release_date(1i)"=>"2012", "release_date(2i)"=>"3", "release_date(3i)"=>"25"}
       @m = mock('movie', :id => '1234', :title => 'Alien')
     end
     it 'should call find method' do
