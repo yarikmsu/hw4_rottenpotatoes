@@ -5,3 +5,11 @@ TAGS
 db/schema.rb
 log/
 db/*.sqlite3
+tmp/
+lib/tasks/
+.bundle
+config/cucumber.yml
+script/cucumber
+coverage/
+features/step_definitions/web_steps.rb
+features/support/selectors.rb
