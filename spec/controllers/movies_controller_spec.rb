@@ -22,17 +22,15 @@ describe MoviesController do
   describe 'create new movie' do
     before(:each) do
       @movie = {"title"=>"s", "rating"=>"G", "release_date(1i)"=>"2012", "release_date(2i)"=>"3", "release_date(3i)"=>"25"}
-      @m = mock('movie')
+      @m = mock('movie', :title => 'Alien')
     end
     it 'should call create! method' do
       Movie.should_receive(:create!).with(@movie).and_return(@m)
-      @m.stub(:title)
       post :create, {:movie => @movie} 
     end
     describe 'after create!' do
       before(:each) do
         Movie.stub(:create!).with(@movie).and_return(@m)
-        @m.stub(:title => 'Alien')
         post :create, {:movie => @movie}
       end
       it 'should notice about creating the movie' do
