@@ -18,9 +18,8 @@ module NavigationHelpers
     when /^the RottenPotatoes home page$/
       '/movies'
     when /^the edit page for "(.*)"$/
-      begin
-        p $1
-      end
+      edit_movie_path(Movie.find_by_title($1))
+
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

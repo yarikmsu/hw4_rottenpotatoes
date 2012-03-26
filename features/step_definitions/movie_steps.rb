@@ -46,3 +46,7 @@ Then /I should (not )?see all of the movies/ do |shouldnot|
   rows = page.all(:xpath, '//table[@id="movies"]/tbody/tr').size
   rows.should == (shouldnot ? 0 : Movie.count)
 end
+
+Then /^the director of "(.*)" should be "(.*)"$/ do |title, director|
+  page.body.should =~ /.*#{title}.*Director:\s#{director}/m
+end
