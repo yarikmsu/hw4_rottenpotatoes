@@ -53,8 +53,25 @@ describe MoviesController do
     end
   end
   describe 'show movie info' do
-    it 'should select show template for rendering'
-    it 'should make the movie attributes available to that template'
+    before(:each) do
+      @m = mock('movie', :id => '1234', :title => 'Alien')
+    end
+    it 'should call find method' do
+      Movie.should_receive(:find).with('1234').and_return(@m)
+      get :show, :id => 1234
+    end
+    context 'after find' do
+      before(:each) do
+        Movie.stub(:find).with('1234').and_return(@m)
+        get :show, :id => 1234
+      end
+      it 'should select show template for rendering' do
+        response.should render_template(:show)
+      end
+      it 'should make the movie attributes available to that template' do
+        assigns(:movie).should == @m
+      end
+    end
   end
   describe 'add new movie' do
     it 'should select add template for rendering' do
