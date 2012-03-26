@@ -134,7 +134,6 @@ describe MoviesController do
   end
   describe 'index' do
     before(:each) do
-      @params = {"ratings"=>{"G"=>"1", "NC-17"=>"1", "PG"=>"1", "PG-13"=>"1", "R"=>"1"}, "sort"=>"title"}
       @movies = [mock('movie'), mock('movie')]
     end
     it 'should call find_all_by_rating method' do
@@ -152,6 +151,18 @@ describe MoviesController do
       it 'should make the movies list available to that template' do
         assigns(:movies).should == @movies
       end
+    end
+    it 'should redirect to the movies list with sort by title param' do
+      get :index, :sort => "title", :ratings => {"G"=>"1"}
+      response.should redirect_to(:action => 'index', :sort => 'title', :ratings => {"G"=>"1"})
+    end
+    it 'should redirect to the movies list with sort by release_date param' do
+      get :index, :sort => "release_date", :ratings => {"G"=>"1"}
+    response.should redirect_to(:action => 'index', :sort => 'release_date', :ratings => {"G"=>"1"})
+    end
+    it 'should redirect to the movies list with ratings params' do
+      get :index, :ratings => {"G"=>"1"}
+      response.should redirect_to(:action => 'index', :ratings => {"G"=>"1"})
     end
   end
 end
