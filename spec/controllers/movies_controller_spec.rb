@@ -133,8 +133,25 @@ describe MoviesController do
     end
   end
   describe 'index' do
-    it 'should call find_all_by_rating method'
-    it 'should select index template for rendering'
-    it 'should make the movies list available to that template for editing'
+    before(:each) do
+      @params = {"ratings"=>{"G"=>"1", "NC-17"=>"1", "PG"=>"1", "PG-13"=>"1", "R"=>"1"}, "sort"=>"title"}
+      @movies = [mock('movie'), mock('movie')]
+    end
+    it 'should call find_all_by_rating method' do
+      Movie.should_receive(:find_all_by_rating).with([],nil).and_return(@movies)
+      get :index
+    end
+    context 'after :find_all_by_rating' do
+      before(:each) do
+        Movie.stub(:find_all_by_rating).with([],nil).and_return(@movies)
+        get :index
+      end
+      it 'should select index template for rendering' do
+        response.should render_template('index')
+      end
+      it 'should make the movies list available to that template' do
+        assigns(:movies).should == @movies
+      end
+    end
   end
 end
