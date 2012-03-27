@@ -165,4 +165,26 @@ describe MoviesController do
       response.should redirect_to(:action => 'index', :ratings => {"G"=>"1"})
     end
   end
+  describe 'find_similar' do
+    before(:each) do
+      @m = mock('movie', :id => '1234', :title => 'Star Wars')
+      @movies = [mock('movie'), mock('movie')]
+    end
+    it 'should call find_all_by_director method' do
+      Movie.should_receive(:find_all_by_director).with('1234').and_return(@movies)
+      get :find_similar, :id => '1234'
+    end
+    context 'after find_all_by_director call' do
+      before(:each) do
+        Movie.stub(:find_all_by_director).with('1234').and_return(@movies)
+        get :find_similar, :id => '1234'
+      end      
+      it 'should select Similar Movies template for rendering' do
+        response.should render_template(:find_similar)
+      end
+      it 'should make movies with same director available to that template' do
+        assigns(:movies).should == @movies
+      end
+    end
+  end
 end

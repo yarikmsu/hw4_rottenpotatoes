@@ -59,4 +59,10 @@ class MoviesController < ApplicationController
     redirect_to movies_path
   end
 
+  def find_similar
+    @movies = Movie.find_all_by_director(params[:id])
+    p params
+    p @movies
+    p Movie.all()
+  end
 end
