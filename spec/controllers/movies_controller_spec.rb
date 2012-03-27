@@ -174,16 +174,30 @@ describe MoviesController do
       Movie.should_receive(:find_with_same_director).with('1234').and_return(@movies)
       get :find_similar, :id => '1234'
     end
-    context 'after find_all_by_director call' do
+    context 'after find_all_by_director call if return is not empty' do
       before(:each) do
         Movie.stub(:find_with_same_director).with('1234').and_return(@movies)
         get :find_similar, :id => '1234'
-      end      
+      end
       it 'should select Similar Movies template for rendering' do
         response.should render_template(:find_similar)
       end
       it 'should make movies with same director available to that template' do
         assigns(:movies).should == @movies
+      end
+    end
+    context 'after find_all_by_director call if return is empty' do
+      before(:each) do
+        Movie.stub(:find_with_same_director).with('1234').and_return([])
+        Movie.stub(:find).with('1234').and_return(@m)
+        get :find_similar, :id => '1234'
+      end
+      it 'should redirect to the movie page' do
+        response.should redirect_to(:movies)
+      end 
+      it 'should notice about missing director info' do
+        @controller.instance_eval{flash.stub!(:sweep)}
+        flash.now[:notice].should be == "'Star Wars' has no director info"
       end
     end
   end

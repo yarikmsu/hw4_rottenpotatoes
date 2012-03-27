@@ -4,6 +4,6 @@ class Movie < ActiveRecord::Base
   end
   def self.find_with_same_director(id)
     director = Movie.find(id).director
-    director.nil? ? [] : Movie.find_all_by_director(director)
+    director.nil? ||  director.empty? ? [] : Movie.find_all_by_director(director)
   end
 end
