@@ -170,13 +170,13 @@ describe MoviesController do
       @m = mock('movie', :id => '1234', :title => 'Star Wars')
       @movies = [mock('movie'), mock('movie')]
     end
-    it 'should call find_all_by_director method' do
-      Movie.should_receive(:find_all_by_director).with('1234').and_return(@movies)
+    it 'should call find_with_same_director method' do
+      Movie.should_receive(:find_with_same_director).with('1234').and_return(@movies)
       get :find_similar, :id => '1234'
     end
     context 'after find_all_by_director call' do
       before(:each) do
-        Movie.stub(:find_all_by_director).with('1234').and_return(@movies)
+        Movie.stub(:find_with_same_director).with('1234').and_return(@movies)
         get :find_similar, :id => '1234'
       end      
       it 'should select Similar Movies template for rendering' do
